@@ -10,6 +10,7 @@ __pycache__/
 *.csv
 
 # Distribution / packaging
+.idea/
 .Python
 build/
 develop-eggs/
