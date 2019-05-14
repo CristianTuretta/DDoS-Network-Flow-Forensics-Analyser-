@@ -44,12 +44,12 @@ DEFAULT_DESTINATION = "8.173.45.67"
 CSV_FORMAT = ","
 PROTOCOLS = {"UDP"}
 
-if __name__ == '__main__':
-	file_name = str(sys.argv[1])
-	n_members = int(sys.argv[2])
-	records_length = int(sys.argv[3])
+def generate(file_path, n_members, records_length):
+	# file_name = str(sys.argv[1])
+	# n_members = int(sys.argv[2])
+	# records_length = int(sys.argv[3])
 
-	csv_file = open(file_name, "a+")
+	csv_file = open(file_path, "a+")
 
 	no = 1
 	normal_usr_pool = generate_source_pool(n_member=n_members)
