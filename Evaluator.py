@@ -2,12 +2,9 @@ import math
 from itertools import islice
 import pandas as pd
 import matplotlib.pyplot as plt
-import sys
+
 
 def evaluate(dataset_path, save_csv_path):
-    # dataset_path = sys.argv[1]
-    # save_csv_path = sys.argv[2]
-
     dataframe = pd.DataFrame(pd.read_csv(dataset_path, sep=";"))
     elapsed_time = dataframe['time_difference'].sum()
     total_data_income = dataframe['total_volume'].sum()
