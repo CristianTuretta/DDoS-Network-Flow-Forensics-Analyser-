@@ -1,4 +1,5 @@
 import argparse
+import glob
 import os
 import shutil
 
@@ -6,10 +7,11 @@ import DatasetGenerator
 import Evaluator
 
 HADOOP_PROJECT_MAIN = "/user/st-turetta/project"
+HADOOP_PROJECT_PATH_OUTPUT_SUBFOLDER = "/ratio_vol_td"
 HADOOP_PROJECT_PATH_INPUT = HADOOP_PROJECT_MAIN + "/input"
 HADOOP_PROJECT_PATH_OUTPUT = HADOOP_PROJECT_MAIN + "/output"
 PIG_SCRIPT_NAME ="udpfloodpcap.pig"
-HEADER = "group,min_ts,max_ts,n_packets,total_volume,time_difference,ratio_vol_td"
+HEADER = "group;min_ts;max_ts;n_packets;total_volume;time_difference;ratio_vol_td"
 
 def generation_routine(dataset_name, n_members, n_lines):
 	print("Generating dataset: " + dataset_name + "...")
@@ -21,25 +23,26 @@ def analysis_routine(dataset_name, save_csv_path):
 	print("Analyzing " + dataset_name + "...")
 
 
-	os.system("pig -x mapreduce -param filename=" + dataset_name + " " + PIG_SCRIPT_NAME )
+#	os.system("pig -x mapreduce -param filename=" + dataset_name + " " + PIG_SCRIPT_NAME )
 
-	os.system("hadoop fs -copyToLocal " + HADOOP_PROJECT_PATH_OUTPUT + "/" + dataset_name)
+	os.system("hadoop fs -copyToLocal " + HADOOP_PROJECT_PATH_OUTPUT + "/" + dataset_name + HADOOP_PROJECT_PATH_OUTPUT_SUBFOLDER + " " + dataset_name)
 
 
 	print("Copying and merging output..")
-	with open(dataset_name + "_rawoutput_concat", 'a') as outfile:
+	with open(dataset_name + "_rawoutput_concat", 'w') as outfile:
 		outfile.write(HEADER)
-		for subdir, dirs, files in os.walk(dataset_name):
-			for file in files:
-				with open(file, 'r') as readfile:
-					outfile.write("\n")
-					shutil.copyfileobj(readfile, outfile)
+		for file in glob.glob(dataset_name + "/" + "part-r-*"):
+			with open(file, 'r') as readfile:
+				outfile.write("\n")
+				shutil.copyfileobj(readfile, outfile)
 
+
+	print("Evaluating...")
+	Evaluator.evaluate(dataset_name + "_rawoutput_concat",save_csv_path)
 
 	print("Clean up...")
-	Evaluator.evaluate(dataset_name + "_rawoutput_concat",save_csv_path)
 	os.remove(dataset_name + "_rawoutput_concat")
-	os.rmdir(dataset_name)
+	shutil.rmtree(dataset_name)
 	print("Done!")
 
 if __name__ == '__main__':
