@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import sys
 
-def evaluate(dataset_path, save_csv_path):
+def evaluate(dataset_name, dataset_path, output_path):
     # dataset_path = sys.argv[1]
     # save_csv_path = sys.argv[2]
 
@@ -21,5 +21,5 @@ def evaluate(dataset_path, save_csv_path):
     plt.xlabel('IP ID')
     plt.ylabel('MB/s')
 
-    plt.savefig("regression_analysis")
-    dataframe.to_csv(save_csv_path, index=False)
+    plt.savefig(output_path + dataset_name + "-regression_analysis.png")
+    dataframe.to_csv(output_path + dataset_name + "-indexed", index=False)

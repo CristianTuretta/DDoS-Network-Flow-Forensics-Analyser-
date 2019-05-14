@@ -19,30 +19,35 @@ def generation_routine(dataset_name, n_members, n_lines):
 	print("Copying dataset into hdfs:" + HADOOP_PROJECT_PATH_INPUT + "/" + dataset_name + "...")
 	os.system("hadoop fs -put " + dataset_name + " " + HADOOP_PROJECT_PATH_INPUT)
 
-def analysis_routine(dataset_name, save_csv_path):
+def analysis_routine(dataset_name):
+
+	output_path = "outputs/" + dataset_name + "/"
+	folder2create = os.path.dirname(output_path)
+	if not os.path.exists(folder2create):
+		os.makedirs(folder2create)
+
 	print("Analyzing " + dataset_name + "...")
 
 
 	os.system("pig -x mapreduce -param filename=" + dataset_name + " " + PIG_SCRIPT_NAME )
 
-	os.system("hadoop fs -copyToLocal " + HADOOP_PROJECT_PATH_OUTPUT + "/" + dataset_name + HADOOP_PROJECT_PATH_OUTPUT_SUBFOLDER + " " + dataset_name)
+	os.system("hadoop fs -copyToLocal " + HADOOP_PROJECT_PATH_OUTPUT + "/" + dataset_name + HADOOP_PROJECT_PATH_OUTPUT_SUBFOLDER + " " + output_path)
 
 
 	print("Copying and merging output..")
-	with open(dataset_name + "_rawoutput_concat", 'w') as outfile:
-		outfile.write(HEADER)
-		for file in glob.glob(dataset_name + "/" + "part-r-*"):
+	with open(output_path + dataset_name + "_rawoutput_concat", 'w') as outfile:
+		outfile.write(HEADER + "\n")
+		for file in sorted(glob.glob(output_path + HADOOP_PROJECT_PATH_OUTPUT_SUBFOLDER[1:] + "/part-r-*")):
 			with open(file, 'r') as readfile:
-				outfile.write("\n")
 				shutil.copyfileobj(readfile, outfile)
 
 
 	print("Evaluating...")
-	Evaluator.evaluate(dataset_name + "_rawoutput_concat",save_csv_path)
+	Evaluator.evaluate(dataset_name=dataset_name, dataset_path= output_path + dataset_name + "_rawoutput_concat", output_path=output_path)
 
 	print("Clean up...")
-	os.remove(dataset_name + "_rawoutput_concat")
-	shutil.rmtree(dataset_name)
+	os.remove(output_path + dataset_name + "_rawoutput_concat")
+	shutil.rmtree(output_path + HADOOP_PROJECT_PATH_OUTPUT_SUBFOLDER[1:])
 	print("Done!")
 
 if __name__ == '__main__':
@@ -50,18 +55,18 @@ if __name__ == '__main__':
 	group = parser.add_mutually_exclusive_group()
 	group.add_argument("-g","--generate", help="Generate only dataset", nargs = 3, metavar = ('dataset_name', 'n_members', 'n_lines'))
 
-	group.add_argument("-a", "--analyze", help="Analyze dataset with Pig and plot", nargs = 2, metavar = ('dataset_name', 'save_csv_path'))
-	group.add_argument("-ga", "--genanalyze", help="Generate and analyze dataset with Pig and plot", nargs=4,
-	                   metavar=('dataset_name', 'n_members', 'n_lines', 'save_csv_path'))
+	group.add_argument("-a", "--analyze", help="Analyze dataset with Pig and plot", nargs = 1, metavar = ('dataset_name'))
+	group.add_argument("-ga", "--genanalyze", help="Generate and analyze dataset with Pig and plot", nargs=3,
+	                   metavar=('dataset_name', 'n_members', 'n_lines'))
 	args = parser.parse_args()
 
 	if args.generate:
 		generation_routine(args.generate[0],args.generate[1],args.generate[2])
 	elif args.analyze:
-		analysis_routine(args.analyze[0], args.analyze[1])
+		analysis_routine(args.analyze[0])
 	elif args.genanalyze:
 		generation_routine(args.genanalyze[0], args.genanalyze[1], args.genanalyze[2])
-		analysis_routine(args.genanalyze[0], args.genanalyze[3])
+		analysis_routine(args.genanalyze[0])
 	else:
 		parser.print_help()
 
