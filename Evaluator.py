@@ -1,3 +1,5 @@
+import math
+from itertools import islice
 import pandas as pd
 import matplotlib.pyplot as plt
 import sys
@@ -16,8 +18,18 @@ if __name__ == '__main__':
     dataframe['margin_to_mean'] = dataframe['total_volume']
     dataframe['margin_to_mean'] = dataframe['margin_to_mean'].apply(lambda x: x - traffic_mean)
 
-    dataframe.plot(kind="scatter", x="id", y="ratio_vol_td", color="black")
-    plt.axhline(traffic_mean)
+    dataframe['squared_margin_to_mean'] = dataframe['margin_to_mean'].apply(lambda x: (x - traffic_mean)**2)
+    sigma = math.sqrt(dataframe['squared_margin_to_mean'].sum()/(len(dataframe)-1))
+
+    fig, ax = plt.subplots()
+    dataframe.plot('id', 'ratio_vol_td', kind='scatter', ax=ax)
+
+    sub_dataframe = pd.concat({'id': dataframe['id'], 'vol': dataframe['ratio_vol_td'], 'source': dataframe['group']}, axis=1)
+    for i, point in islice(sub_dataframe.iterrows(), 0, 5):
+        ax.text(point['id'], point['vol'], str(point['source']).split(",")[0].replace('(', ' '))
+
+    plt.axhline(traffic_mean, color='r')
+    # plt.axhline(sigma, color='g')
     plt.xlabel('IP ID')
     plt.ylabel('MB/s')
 
