@@ -4,9 +4,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import sys
 
-if __name__ == '__main__':
-    dataset_path = sys.argv[1]
-    save_csv_path = sys.argv[2]
+def evaluate(dataset_path, save_csv_path):
+    # dataset_path = sys.argv[1]
+    # save_csv_path = sys.argv[2]
 
     dataframe = pd.DataFrame(pd.read_csv(dataset_path, sep=";"))
     elapsed_time = dataframe['time_difference'].sum()
