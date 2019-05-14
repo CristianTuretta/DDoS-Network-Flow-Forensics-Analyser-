@@ -23,7 +23,7 @@ def analysis_routine(dataset_name, save_csv_path):
 	print("Analyzing " + dataset_name + "...")
 
 
-#	os.system("pig -x mapreduce -param filename=" + dataset_name + " " + PIG_SCRIPT_NAME )
+	os.system("pig -x mapreduce -param filename=" + dataset_name + " " + PIG_SCRIPT_NAME )
 
 	os.system("hadoop fs -copyToLocal " + HADOOP_PROJECT_PATH_OUTPUT + "/" + dataset_name + HADOOP_PROJECT_PATH_OUTPUT_SUBFOLDER + " " + dataset_name)
 
