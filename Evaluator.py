@@ -30,5 +30,5 @@ def evaluate(dataset_name, dataset_path, output_path):
     plt.xlabel('IP ID')
     plt.ylabel('MB/s')
 
-    plt.savefig(output_path + dataset_name + "-regression_analysis.png")
+    plt.savefig(output_path + dataset_name + "-regression_analysis.png", dpi=300)
     dataframe.to_csv(output_path + dataset_name + "-indexed", index=False)
