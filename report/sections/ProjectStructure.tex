@@ -18,15 +18,19 @@ The script also automatically records infos about performance timing under \path
 
 \textit{PerformanceAnalyser.py} also exposes a method used as a wrapper to call the generation and analysis routines, using a \textbf{CProfile} python module to gain time statistics.
 
+\bigskip
 The first two mentioned scripts are the user interface of our tool. However, we have other core scripts which make the generation/analysis possible:
 
 \subsection{DatasetGenerator}
 \textit{DatasetGenerator.py} contains the core generation routine of datasets. It generates a pool of innocent IPs and an attackers' one, then it fills line-by-line the dataset with random and bogus informations, extracting random users and attackers.
-	\begin{itemize}
-		\item{\textit{Evaluator.py}}: it exposes the main routine which processes the Pig script output. It computes the mean velocity of all users, and then produces a plot consisting of the velocity of every single user, represented with a blue line, previously calculated by the Pig script (\textit{udpfloodpcap.pig}) and the mean velocity of all users, represented with a red line. The data scientist could distinguish between evil and good users just looking at the deviation from the average.
-	\item{\textit{udpfloodpcap.pig}}: calculates the mean velocity of every machine given a dataset in input.
 
-	\end{itemize}
+\subsection{Evaluator} 
+\textit{Evaluator.py} exposes the main routine which processes the Pig script output. It computes the mean velocity of all users, and then produces a plot consisting of the velocity of every single user, represented with a blue line, previously calculated by the Pig script (\textit{udpfloodpcap.pig}) and the mean velocity of all users, represented with a red line. The data scientist could distinguish between evil and good users just looking at the deviation from the average.
+
+\subsection{Pig script}
+\textit{Udpfloodpcap.pig} calculates the mean velocity of every machine given a dataset in input.
+
+
 
 
 
