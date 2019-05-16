@@ -59,3 +59,5 @@ if __name__ == '__main__':
 		generation_df = dataframe[dataframe['kind'] == 'g']
 		generation_df.insert(loc=0, column='id', value=range(1, len(generation_df) + 1))
 		plot_stats(generation_df)
+	else:
+		parser.print_help()
