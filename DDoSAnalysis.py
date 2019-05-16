@@ -14,9 +14,9 @@ PIG_SCRIPT_NAME ="udpfloodpcap.pig"
 HEADER = "group;min_ts;max_ts;n_packets;total_volume;time_difference;ratio_vol_td"
 
 
-def generation_routine(dataset_name, n_members, n_lines):
+def generation_routine(dataset_name, n_members, n_lines, n_attackers):
 	print("Generating dataset: " + dataset_name + "...")
-	DatasetGenerator.generate(dataset_name, int(n_members), int(n_lines))
+	DatasetGenerator.generate(dataset_name, int(n_members), int(n_lines), int(n_attackers))
 	print("Copying dataset into hdfs:" + HADOOP_PROJECT_PATH_INPUT + "/" + dataset_name + "...")
 	os.system("hadoop fs -put " + dataset_name + " " + HADOOP_PROJECT_PATH_INPUT)
 
@@ -52,22 +52,22 @@ if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
 	group = parser.add_mutually_exclusive_group()
 	group.add_argument("-g", "--generate", help="Generate only dataset",
-	                   nargs=3, metavar=('dataset_name', 'n_members', 'n_lines'))
+	                   nargs=4, metavar=('dataset_name', 'n_members', 'n_lines', 'n_attackers'))
 
 	group.add_argument("-a", "--analyze", help="Analyze dataset with Pig and plot",
 	                   nargs=1, metavar=('dataset_name'))
 
 	group.add_argument("-ga", "--genanalyze", help="Generate and analyze dataset with Pig and plot",
-	                   nargs=3, metavar=('dataset_name', 'n_members', 'n_lines'))
+	                   nargs=4, metavar=('dataset_name', 'n_members', 'n_lines', 'n_attackers'))
 
 	args = parser.parse_args()
 
 	if args.generate:
-		perfAnalyser.performance_eval(generation_routine, args.generate[0], args.generate[1], args.generate[2])
+		perfAnalyser.performance_eval(generation_routine, args.generate[0], args.generate[1], args.generate[2], args.generate[3])
 	elif args.analyze:
 		perfAnalyser.performance_eval(analysis_routine, args.analyze[0])
 	elif args.genanalyze:
-		perfAnalyser.performance_eval(generation_routine, args.genanalyze[0], args.genanalyze[1], args.genanalyze[2])
+		perfAnalyser.performance_eval(generation_routine, args.genanalyze[0], args.genanalyze[1], args.genanalyze[2], args.genanalyze[3])
 		perfAnalyser.performance_eval(analysis_routine, args.analyze[0])
 	else:
 		parser.print_help()
