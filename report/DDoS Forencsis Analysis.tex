@@ -1,0 +1,63 @@
+\documentclass[10pt,journal,compsoc]{IEEEtran}
+\usepackage{url}
+
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{cleveref}
+\usepackage{subcaption}
+\usepackage{hyperref}
+
+% *** CITATION PACKAGES ***
+%
+\ifCLASSOPTIONcompsoc
+  \usepackage[nocompress]{cite}
+\else
+  \usepackage{cite}
+\fi
+
+% *** GRAPHICS RELATED PACKAGES ***
+%
+\ifCLASSINFOpdf
+\else
+\fi
+
+\newcommand\MYhyperrefoptions{bookmarks=true,bookmarksnumbered=true,
+pdfpagemode={UseOutlines},plainpages=false,pdfpagelabels=true,
+colorlinks=true,linkcolor={black},citecolor={black},urlcolor={black},
+pdftitle={DDoS Network Flow Forensics Analyser},%<!CHANGE!
+pdfsubject={Big Data project},%<!CHANGE!
+pdfauthor={Cristian Turetta, Andrea Perazzoli},%<!CHANGE!
+pdfkeywords={Computer Society, DDoS, Forensics, BigData, Data Science, Hadoop, Python}}
+             
+% correct bad hyphenation here
+\hyphenation{op-tical net-works semi-conduc-tor}
+
+\begin{document}
+\title{DDoS Network Flow Forensics Analyser}
+
+\author{Cristian~Turetta,
+        and~Andrea~Perazzoli% <-this % stops a space
+}
+
+% The paper headers
+\markboth{May~2019}%
+{Shell \MakeLowercase{\textit{et al.}}:}
+
+\IEEEtitleabstractindextext{
+\begin{abstract}
+Distributed denial-of-service (DDoS) is a rapidly growing problem. The multitude and variety of both the attacks and the defense approaches is overwhelming. This report introduces ...  
+\end{abstract}
+}
+
+% make the title area
+\maketitle
+
+\IEEEdisplaynontitleabstractindextext
+\IEEEpeerreviewmaketitle
+
+% sections area
+\input{sections/Introduction}
+
+\input{sections/Bibliography}
+\end{document}
