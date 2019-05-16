@@ -1,29 +1,33 @@
 \section{Project structure and implementation}
 Our project and its source code is freely downloadable on \href{https://github.com/CristianTuretta/DDoS-Network-Flow-Forensics-Analyser-.git}{Github}. Here, we focused on the UDP flood D(D)oS analysis of pcap records: the goal is to point out good and evil users given a pcap network sniff file. The project primarly consists in two executable Python 3 scripts:
-\begin{itemize}
-	\item{\textit{DDoSAnalysis.py}}: this script can be used in two different modes, depending on the line parameters used. 
-		\begin{itemize}
-			\item \textit{-g dataset\_name n\_members n\_lines n\_attackers} Generates a random, bogus dataset in the current working directory with the name specified in the second argument, alongside with the number of normal network users specified in \textit{n\_members} argument, the dimension of the dataset (in lines) and the number of infected machines. At the end of the generation process, it copies the dataset into the Hadoop File System. We assumed that Hadoop is installed and a folder tree under \path{hdfs://user/your_user/project/input} exists.
-			\item \textit{-a dataset\_name} \\Begin the analysis of the dataset \textit{dataset\_name} using a Pig script. In order to work, the dataset must have been previously copied into the Hadoop input folder, which automatically happens if the dataset is generated using \textit{-g} option. It saves the elaborated dataset under \path{outputs/dataset_name} with an image consisting of a plot of every agent average velocity (bps).
-			\item \textit{-ga dataset\_name n\_members n\_lines n\_attackers} Launches both the generation and the analysis 
-		\end{itemize}
-		The script also automatically records infos about performance timing under \path{PerformanceHistory.csv}.
-		\pagebreak
-		\item{\textit{PerformanceAnalyser.py}}: this script is used to automatically plot all the infos stored under  \path{PerformanceHistory.csv}. It supports two modes:
-			\begin{itemize}
-				\item \textit{-a img\_name} \\ stores a plot under the current working directory named \textit{img\_name} of analysis statistics (history of dataset analyzed and time elapsed)
-				\item \textit{-g img\_name} \\ stores a plot under the current working directory named \textit{img\_name} of dataset generation statistics (history of dataset generated and time elapsed)
-			\end{itemize}
-			\textit{PerformanceAnalyser.py} also exposes a method used as a wrapper to call the generation and analysis routines, using a \textbf{CProfile} python module to gain time statistics.
-\end{itemize}
+\subsection{DDoSAnalysis}
+\textit{DDoSAnalysis.py} can be used in two different modes, depending on the line parameters used. 
+	\begin{itemize}
+		\item \textit{-g dataset\_name n\_members n\_lines n\_attackers} Generates a random, bogus dataset in the current working directory with the name specified in the second argument, alongside with the number of normal network users specified in \textit{n\_members} argument, the dimension of the dataset (in lines) and the number of infected machines. At the end of the generation process, it copies the dataset into the Hadoop File System. We assumed that Hadoop is installed and a folder tree under \path{hdfs://user/your_user/project/input} exists.
+		\item \textit{-a dataset\_name} \\Begin the analysis of the dataset \textit{dataset\_name} using a Pig script. In order to work, the dataset must have been previously copied into the Hadoop input folder, which automatically happens if the dataset is generated using \textit{-g} option. It saves the elaborated dataset under \path{outputs/dataset_name} with an image consisting of a plot of every agent average velocity (bps).
+		\item \textit{-ga dataset\_name n\_members n\_lines n\_attackers} Launches both the generation and the analysis 
+	\end{itemize}
+The script also automatically records infos about performance timing under \path{PerformanceHistory.csv}.
+
+\subsection{PerformanceAnalyser}
+\textit{PerformanceAnalyser.py} is used to automatically plot all the infos stored under \path{PerformanceHistory.csv}. It supports two modes:
+	\begin{itemize}
+		\item \textit{-a img\_name} \\ stores a plot under the current working directory named \textit{img\_name} of analysis statistics (history of dataset analyzed and time elapsed)
+		\item \textit{-g img\_name} \\ stores a plot under the current working directory named \textit{img\_name} of dataset generation statistics (history of dataset generated and time elapsed)
+	\end{itemize}
+
+\textit{PerformanceAnalyser.py} also exposes a method used as a wrapper to call the generation and analysis routines, using a \textbf{CProfile} python module to gain time statistics.
 
 The first two mentioned scripts are the user interface of our tool. However, we have other core scripts which make the generation/analysis possible:
 
-\begin{itemize}
-	\item{\textit{DatasetGenerator.py}}: it contains the core generation routine of datasets. It generates a pool of innocent IPs and an attackers' one, then it fills line-by-line the dataset with random and bogus informations, extracting random users and attackers.
-	\item{\textit{Evaluator.py}}: it exposes the main routine which processes the Pig script output. It computes the mean velocity of all users, and then produces a plot consisting of the velocity of every single user, represented with a blue line, previously calculated by the Pig script (\textit{udpfloodpcap.pig}) and the mean velocity of all users, represented with a red line. The data scientist could distinguish between evil and good users just looking at the deviation from the average.
-	\item{\textit{udpfloodpcap.pig}}: calculates the mean velocity of every machine given a dataset in input
-\end{itemize}
+\subsection{DatasetGenerator}
+\textit{DatasetGenerator.py} contains the core generation routine of datasets. It generates a pool of innocent IPs and an attackers' one, then it fills line-by-line the dataset with random and bogus informations, extracting random users and attackers.
+	\begin{itemize}
+		\item{\textit{Evaluator.py}}: it exposes the main routine which processes the Pig script output. It computes the mean velocity of all users, and then produces a plot consisting of the velocity of every single user, represented with a blue line, previously calculated by the Pig script (\textit{udpfloodpcap.pig}) and the mean velocity of all users, represented with a red line. The data scientist could distinguish between evil and good users just looking at the deviation from the average.
+	\item{\textit{udpfloodpcap.pig}}: calculates the mean velocity of every machine given a dataset in input.
+
+	\end{itemize}
+
 
 
 
