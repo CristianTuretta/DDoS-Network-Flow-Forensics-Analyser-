@@ -71,9 +71,9 @@ if __name__ == '__main__':
 	elif args.analyze:
 		perfAnalyser.performance_eval(analysis_routine, args.analyze[0], True)
 	elif args.analyzenopig:
-		perfAnalyser.performance_eval(analysis_routine, args.analyze[0], False)
+		perfAnalyser.performance_eval(analysis_routine, args.analyzenopig[0], False)
 	elif args.genanalyze:
 		perfAnalyser.performance_eval(generation_routine, args.genanalyze[0], args.genanalyze[1], args.genanalyze[2], args.genanalyze[3], args.genanalyze[4], args.genanalyze[5])
-		perfAnalyser.performance_eval(analysis_routine, args.analyze[0], True)
+		perfAnalyser.performance_eval(analysis_routine, args.genanalyze[0], True)
 	else:
 		parser.print_help()
