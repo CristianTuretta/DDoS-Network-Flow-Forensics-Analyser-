@@ -21,7 +21,7 @@ def generation_routine(dataset_name, n_members, n_lines, n_attackers):
 	os.system("hadoop fs -put " + dataset_name + " " + HADOOP_PROJECT_PATH_INPUT)
 
 
-def analysis_routine(dataset_name):
+def analysis_routine(dataset_name, pig=True):
 	output_path = "outputs/" + dataset_name + "/"
 	folder2create = os.path.dirname(output_path)
 	if not os.path.exists(folder2create):
@@ -29,7 +29,8 @@ def analysis_routine(dataset_name):
 
 	print("Analyzing " + dataset_name + "...")
 
-	os.system("pig -x mapreduce -param filename=" + dataset_name + " " + PIG_SCRIPT_NAME )
+	if pig:
+		os.system("pig -x mapreduce -param filename=" + dataset_name + " " + PIG_SCRIPT_NAME )
 	os.system("hadoop fs -copyToLocal " + HADOOP_PROJECT_PATH_OUTPUT + "/" + dataset_name + HADOOP_PROJECT_PATH_OUTPUT_SUBFOLDER + " " + output_path)
 
 	print("Copying and merging output..")
@@ -52,22 +53,27 @@ if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
 	group = parser.add_mutually_exclusive_group()
 	group.add_argument("-g", "--generate", help="Generate only dataset",
-	                   nargs=4, metavar=('dataset_name', 'n_members', 'n_lines', 'n_attackers'))
+	                   nargs=6, metavar=('dataset_name', 'n_members', 'n_lines', 'n_attackers', 'atk_volume', 'atk_duration'))
 
 	group.add_argument("-a", "--analyze", help="Analyze dataset with Pig and plot",
 	                   nargs=1, metavar=('dataset_name'))
 
+	group.add_argument("-anp", "--analyzenopig", help="Analyze dataset already analyzed with Pig and plot",
+	                   nargs=1, metavar=('dataset_name'))
+
 	group.add_argument("-ga", "--genanalyze", help="Generate and analyze dataset with Pig and plot",
-	                   nargs=4, metavar=('dataset_name', 'n_members', 'n_lines', 'n_attackers'))
+	                   nargs=6, metavar=('dataset_name', 'n_members', 'n_lines', 'n_attackers', 'atk_volume', 'atk_duration'))
 
 	args = parser.parse_args()
 
 	if args.generate:
-		perfAnalyser.performance_eval(generation_routine, args.generate[0], args.generate[1], args.generate[2], args.generate[3])
+		perfAnalyser.performance_eval(generation_routine, args.generate[0], args.generate[1], args.generate[2], args.generate[3], args.generate[4], args.generate[5])
 	elif args.analyze:
-		perfAnalyser.performance_eval(analysis_routine, args.analyze[0])
+		perfAnalyser.performance_eval(analysis_routine, args.analyze[0], True)
+	elif args.analyzenopig:
+		perfAnalyser.performance_eval(analysis_routine, args.analyze[0], False)
 	elif args.genanalyze:
-		perfAnalyser.performance_eval(generation_routine, args.genanalyze[0], args.genanalyze[1], args.genanalyze[2], args.genanalyze[3])
-		perfAnalyser.performance_eval(analysis_routine, args.analyze[0])
+		perfAnalyser.performance_eval(generation_routine, args.genanalyze[0], args.genanalyze[1], args.genanalyze[2], args.genanalyze[3], args.genanalyze[4], args.genanalyze[5])
+		perfAnalyser.performance_eval(analysis_routine, args.analyze[0], True)
 	else:
 		parser.print_help()

@@ -17,11 +17,11 @@ def performance_eval(function, *args):
 
 	stats = pstats.Stats(profiler)
 
-	if len(args) == 3:
+	if len(args) == 6:
 		# generation branch
 		history_file.write(
 			str(datetime.datetime.now().time()).split('.')[0] + ",g," + args[0] + "," + str(stats.total_tt) + "\n")
-	elif len(args) == 1:
+	elif len(args) == 2:
 		# analysis branch
 		history_file.write(
 			str(datetime.datetime.now().time()).split('.')[0] + ",a," + args[0] + "," + str(stats.total_tt) + "\n")

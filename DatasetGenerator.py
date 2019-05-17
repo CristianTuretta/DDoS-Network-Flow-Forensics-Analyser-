@@ -54,11 +54,8 @@ DEFAULT_DESTINATION = "8.173.45.67"
 CSV_FORMAT = ","
 PROTOCOLS = {"UDP"}
 
-def generate(file_path, n_members, records_length, n_attackers):
-	# file_name = str(sys.argv[1])
-	# n_members = int(sys.argv[2])
-	# records_length = int(sys.argv[3])
 
+def generate(file_path, n_members, records_length, n_attackers, atk_volume, atk_duration):
 	csv_file = open(file_path, "a+")
 
 	no = 1
@@ -66,7 +63,6 @@ def generate(file_path, n_members, records_length, n_attackers):
 	time = 0.0
 
 	attack_pool = generate_source_pool_attackers(n_attackers)
-
 
 	while no <= records_length:
 		packet = forge_packet(no, time, normal_usr_pool, DEFAULT_DESTINATION, PROTOCOLS, getrandbits(16), "info")
@@ -76,6 +72,6 @@ def generate(file_path, n_members, records_length, n_attackers):
 		time += random.uniform(0.000001, 1.0)
 
 		if attack_pool:
-			attack(csv_file, time, DEFAULT_DESTINATION, 1000, 10000, 1, attack_pool)  # Attack 10 MB/s
+			attack(csv_file, time, DEFAULT_DESTINATION, 1000, atk_volume, atk_duration, attack_pool)
 
 	csv_file.close()

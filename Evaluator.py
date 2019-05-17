@@ -7,8 +7,9 @@ import matplotlib.pyplot as plt
 def evaluate(dataset_name, dataset_path, output_path):
     dataframe = pd.DataFrame(pd.read_csv(dataset_path, sep=";"))
     elapsed_time = dataframe['time_difference'].sum()
-    total_data_income = dataframe['total_volume'].sum()
+    total_data_income = (dataframe['total_volume'].sum())/(1**-6) #Mb
     traffic_mean = total_data_income/elapsed_time
+    dataframe['total_volume'] /= (1**-6)
 
     dataframe.insert(loc=0, column='id', value=range(1, len(dataframe) + 1))
 
@@ -18,6 +19,7 @@ def evaluate(dataset_name, dataset_path, output_path):
     dataframe['squared_margin_to_mean'] = dataframe['margin_to_mean'].apply(lambda x: (x - traffic_mean)**2)
     sigma = math.sqrt(dataframe['squared_margin_to_mean'].sum()/(len(dataframe)-1))
 
+    dataframe['norm_squared_mtm'] = 0.0
     dataframe['norm_squared_mtm'] -= dataframe['squared_margin_to_mean'].min()
     dataframe['norm_squared_mtm'] /= dataframe['squared_margin_to_mean'].max()
 
@@ -31,7 +33,7 @@ def evaluate(dataset_name, dataset_path, output_path):
 
     plt.axhline(traffic_mean, color='r')
     plt.xlabel('IP ID')
-    plt.ylabel('MB/s')
+    plt.ylabel('Mb/s')
 
     plt.savefig(output_path + dataset_name + "-diff_from_mean_analysis.png", dpi=300)
 
