@@ -8,7 +8,7 @@ Based on data volume rates, we do need mathematical models to identify which are
 	\item \textit{ratio\_vol\_td} \\ Represents the volume over seconds exchanged during the time window.
 \end{itemize}
 
-The mathematical model must be able judge the data by using a threshold, in our case the maximal volume of traffic per second supported by the server under analysis represents this threshold.
+The mathematical model must be able judge the data \cite{detection_by_path_analaysis} by using a threshold, in our case the maximal volume of traffic per second supported by the server under analysis represents this threshold.
 This threshold can be estimated by adding an $\alpha$ factor to the mean of volume exchanged during the time of records.
 
 Using \textit{python} in order to manipulate the results returned by \textit{Pig-latin} we decide to use \textbf{standard deviation} as mathematical model to identify suspicious source address.
