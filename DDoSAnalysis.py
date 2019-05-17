@@ -14,9 +14,9 @@ PIG_SCRIPT_NAME ="udpfloodpcap.pig"
 HEADER = "group;min_ts;max_ts;n_packets;total_volume;time_difference;ratio_vol_td"
 
 
-def generation_routine(dataset_name, n_members, n_lines, n_attackers, atk_volume, atk_duration):
+def generation_routine(dataset_name, n_members, n_lines, n_attackers):
 	print("Generating dataset: " + dataset_name + "...")
-	DatasetGenerator.generate(dataset_name, int(n_members), int(n_lines), int(n_attackers), int(atk_volume), int(atk_duration))
+	DatasetGenerator.generate(dataset_name, int(n_members), int(n_lines), int(n_attackers))
 	print("Copying dataset into hdfs:" + HADOOP_PROJECT_PATH_INPUT + "/" + dataset_name + "...")
 	os.system("hadoop fs -put " + dataset_name + " " + HADOOP_PROJECT_PATH_INPUT)
 
