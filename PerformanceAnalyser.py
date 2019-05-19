@@ -5,10 +5,16 @@ import argparse
 import pandas as pd
 import matplotlib.pyplot as plt
 from itertools import islice
+import os
 
+HEADER = 'time,kind,name,seconds'
 
 def performance_eval(function, *args):
 	history_file = open("PerformanceHistory.csv", "a+")
+
+	if not os.path.getsize("PerformanceHistory.csv") > 0:
+		history_file.write(HEADER + "\n")
+
 
 	profiler = cProfile.Profile()
 	profiler.enable()
@@ -17,11 +23,11 @@ def performance_eval(function, *args):
 
 	stats = pstats.Stats(profiler)
 
-	if len(args) == 6:
+	if function.__name__ == 'generation_routine':
 		# generation branch
 		history_file.write(
 			str(datetime.datetime.now().time()).split('.')[0] + ",g," + args[0] + "," + str(stats.total_tt) + "\n")
-	elif len(args) == 2:
+	elif function.__name__ == 'analysis_routine':
 		# analysis branch
 		history_file.write(
 			str(datetime.datetime.now().time()).split('.')[0] + ",a," + args[0] + "," + str(stats.total_tt) + "\n")
