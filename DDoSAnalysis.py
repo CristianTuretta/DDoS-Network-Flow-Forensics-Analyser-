@@ -5,8 +5,9 @@ import shutil
 import PerformanceAnalyser as perfAnalyser
 import DatasetGenerator
 import Evaluator
+import pwd
 
-HADOOP_PROJECT_MAIN = "/user/st-turetta/project"
+HADOOP_PROJECT_MAIN = "/user/" + pwd.getpwuid( os.getuid() )[ 0 ] + "/project"
 HADOOP_PROJECT_PATH_OUTPUT_SUBFOLDER = "/ratio_vol_td"
 HADOOP_PROJECT_PATH_INPUT = HADOOP_PROJECT_MAIN + "/input"
 HADOOP_PROJECT_PATH_OUTPUT = HADOOP_PROJECT_MAIN + "/output"
