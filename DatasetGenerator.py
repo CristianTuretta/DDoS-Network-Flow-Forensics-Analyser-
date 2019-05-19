@@ -71,7 +71,7 @@ def generate(file_path, n_members, records_length, n_attackers, atk_volume, atk_
 		no += 1
 		time += random.uniform(0.000001, 1.0)
 
-		if attack_pool:
-			attack(csv_file, time, DEFAULT_DESTINATION, 1000, atk_volume, atk_duration, attack_pool)
+	if attack_pool:
+		attack(csv_file, time, DEFAULT_DESTINATION, 1000, atk_volume, atk_duration, attack_pool)
 
 	csv_file.close()
