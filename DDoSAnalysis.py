@@ -14,6 +14,7 @@ PIG_SCRIPT_NAME ="udpfloodpcap.pig"
 HEADER = "group;min_ts;max_ts;n_packets;total_volume;time_difference;ratio_vol_td"
 
 
+
 def generation_routine(dataset_name, dimension):
 	print("Generating dataset: " + dataset_name + "...")
 	DatasetGenerator.generate(dataset_name, int(dimension))
