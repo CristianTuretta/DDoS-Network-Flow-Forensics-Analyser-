@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 def evaluate(dataset_name, dataset_path, output_path):
     dataframe = pd.DataFrame(pd.read_csv(dataset_path, sep=";"))
     elapsed_time = dataframe['time_difference'].sum()
-    total_data_income = (dataframe['total_volume'].sum())/(1**6) #Mb
+    total_data_income = (dataframe['total_volume'].sum())/(1**6)  # Mb
     traffic_mean_vol = total_data_income/elapsed_time
     traffic_mean = total_data_income/len(dataframe)
     dataframe['total_volume'] /= (1**6)
@@ -21,28 +21,28 @@ def evaluate(dataset_name, dataset_path, output_path):
     sigma = math.sqrt(dataframe['squared_margin_to_mean'].sum()/(len(dataframe)-1))
 
     fig, ax = plt.subplots()
-    dataframe.plot('id', 'ratio_vol_td', kind='scatter', ax=ax)
+    dataframe.plot('id', 'ratio_vol_td', kind='scatter', linewidth='0.5', ax=ax, label='Margin from mean')
 
-    sub_dataframe = pd.concat({'id': dataframe['id'], 'vol': dataframe['ratio_vol_td'], 'source': dataframe['group']},
-                              axis=1)
-    for i, point in islice(sub_dataframe.iterrows(), 0, 5):
-        ax.text(point['id'], point['vol'], str(point['source']).split(",")[0].replace('(', ' '))
+    # sub_dataframe = pd.concat({'id': dataframe['id'], 'vol': dataframe['ratio_vol_td'], 'source': dataframe['group']},
+    #                          axis=1)
+    # for i, point in islice(sub_dataframe.iterrows(), 0, 5):
+    #    ax.text(point['id'], point['vol'], str(point['source']).split(",")[0].replace('(', ' '))
 
-    plt.axhline(traffic_mean_vol, color='g')
+    plt.axhline(traffic_mean_vol, color='g', label='Mean')
     plt.xlabel('IP ID')
     plt.ylabel('Mb/s')
 
     plt.savefig(output_path + dataset_name + "-diff_from_mean_analysis.png", dpi=300)
 
     fig, ax = plt.subplots()
-    dataframe.plot('id', 'squared_margin_to_mean', kind='scatter', ax=ax)
+    dataframe.plot('id', 'squared_margin_to_mean', kind='scatter', linewidth='0.5', ax=ax, label='Squared margin from mean')
 
-    sub_dataframe = pd.concat({'id': dataframe['id'], 'mtm': dataframe['squared_margin_to_mean'],
-                               'source': dataframe['group']}, axis=1)
-    for i, point in islice(sub_dataframe.iterrows(), 0, 5):
-        ax.text(point['id'], point['mtm'], str(point['source']).split(",")[0].replace('(', ' '))
+    # sub_dataframe = pd.concat({'id': dataframe['id'], 'mtm': dataframe['squared_margin_to_mean'],
+    #                           'source': dataframe['group']}, axis=1)
+    # for i, point in islice(sub_dataframe.iterrows(), 0, 5):
+    #    ax.text(point['id'], point['mtm'], str(point['source']).split(",")[0].replace('(', ' '))
 
-    plt.axhline(sigma**2, color='r')
+    plt.axhline(sigma**2, color='r', label='Sigma')
     plt.xlabel('IP ID')
     plt.ylabel('Squared margin to mean')
 
