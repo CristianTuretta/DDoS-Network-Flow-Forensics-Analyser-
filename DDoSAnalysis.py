@@ -63,7 +63,7 @@ def sizeof_fmt(num, suffix='B'):
 
 
 def size_estimation_routine(records_length, n_attackers, atk_volume, atk_duration):
-	return sizeof_fmt(AVG_LINE_SIZE * (int(records_length) + int(n_attackers) * (int(atk_volume) / 1000) * int(atk_duration)))
+	return sizeof_fmt(AVG_LINE_SIZE * (int(records_length) + (int(atk_volume) / 1000) * int(atk_duration)))
 
 
 if __name__ == '__main__':
