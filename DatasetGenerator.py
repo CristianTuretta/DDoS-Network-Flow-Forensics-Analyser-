@@ -69,7 +69,7 @@ def generate(file_path, n_members, records_length, n_attackers, atk_volume, atk_
 		append_to_csv(csv_file, CSV_FORMAT.join(packet))
 
 		no += 1
-		time += random.uniform(0.000001, 1.0)
+		time += random.uniform(0.000001, 0.3)
 
 	if attack_pool:
 		attack(csv_file, time, DEFAULT_DESTINATION, 1000, atk_volume, atk_duration, attack_pool)  # 1000 = 1kB
