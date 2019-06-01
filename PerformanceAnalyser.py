@@ -42,7 +42,11 @@ def plot_stats(stats_df):
 
 	for i, point in islice(sub_dataframe.iterrows(), 0, 5):
 		ax.text(point['id'], point['minutes'], str(point['name']).split(".")[0])
-	plt.savefig(args.analysis_sts[0], dpi=300)
+
+	if args.analysis_sts[0]:
+		plt.savefig(args.analysis_sts[0], dpi=300)
+	else:
+		plt.savefig(args.generation_sts[0], dpi=300)
 
 
 if __name__ == '__main__':
