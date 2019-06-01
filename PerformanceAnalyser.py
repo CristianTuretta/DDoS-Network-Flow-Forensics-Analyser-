@@ -34,7 +34,7 @@ def performance_eval(function, *args):
 	history_file.close()
 
 
-def plot_stats(stats_df):
+def plot_stats(stats_df, mode):
 	sub_dataframe = pd.concat(
 		{'id': stats_df['id'], 'name': stats_df['name'], 'minutes': stats_df['seconds']/60}, axis=1)
 
@@ -43,9 +43,9 @@ def plot_stats(stats_df):
 	for i, point in islice(sub_dataframe.iterrows(), 0, 5):
 		ax.text(point['id'], point['minutes'], str(point['name']).split(".")[0])
 
-	if args.analysis_sts[0]:
+	if mode == 'a':
 		plt.savefig(args.analysis_sts[0], dpi=300)
-	else:
+	elif mode == 'g':
 		plt.savefig(args.generation_sts[0], dpi=300)
 
 
@@ -64,10 +64,10 @@ if __name__ == '__main__':
 	if args.analysis_sts:
 		analysis_df = dataframe[dataframe['kind'] == 'a']
 		analysis_df.insert(loc=0, column='id', value=range(1, len(analysis_df) + 1))
-		plot_stats(analysis_df)
+		plot_stats(analysis_df, 'a')
 	elif args.generation_sts:
 		generation_df = dataframe[dataframe['kind'] == 'g']
 		generation_df.insert(loc=0, column='id', value=range(1, len(generation_df) + 1))
-		plot_stats(generation_df)
+		plot_stats(generation_df, 'g')
 	else:
 		parser.print_help()
