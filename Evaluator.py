@@ -66,8 +66,8 @@ def evaluate(dataset_name, dataset_path, output_path):
     plt.savefig(output_path + dataset_name + "-volume_analysis.png", dpi=300)
 
     file = open(output_path + dataset_name + "-report", 'a+')
-    file.write("Data outliers (" + len(data_outliers) + "): " + str(data_outliers) + "\n")
-    file.write("Traffic outliers:(" + len(traffic_outliers) + "): " + str(traffic_outliers) + "\n")
+    file.write("Data outliers (" + str(len(data_outliers)) + "): " + str(data_outliers) + "\n")
+    file.write("Traffic outliers:(" + str(len(traffic_outliers)) + "): " + str(traffic_outliers) + "\n")
     file.close()
 
     dataframe.to_csv(output_path + dataset_name + "-indexed", index=False)
