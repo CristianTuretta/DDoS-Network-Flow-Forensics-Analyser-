@@ -32,26 +32,26 @@ def analysis_routine(dataset_name, pig=True):
 
 	print("Analyzing " + dataset_name + "...")
 
-	if pig:
-		os.system("pig -x mapreduce -param filename=" + dataset_name + " " + PIG_SCRIPT_NAME)
-	os.system(
-		"hadoop fs -copyToLocal " + HADOOP_PROJECT_PATH_OUTPUT + "/" + dataset_name + HADOOP_PROJECT_PATH_OUTPUT_SUBFOLDER + " " + output_path)
-
-	print("Copying and merging output..")
-	with open(output_path + dataset_name + "_rawoutput_concat", 'w') as outfile:
-		outfile.write(HEADER + "\n")
-		for file in sorted(glob.glob(output_path + HADOOP_PROJECT_PATH_OUTPUT_SUBFOLDER[1:] + "/part-r-*")):
-			with open(file, 'r') as readfile:
-				shutil.copyfileobj(readfile, outfile)
+	# if pig:
+	# 	os.system("pig -x mapreduce -param filename=" + dataset_name + " " + PIG_SCRIPT_NAME)
+	# os.system(
+	# 	"hadoop fs -copyToLocal " + HADOOP_PROJECT_PATH_OUTPUT + "/" + dataset_name + HADOOP_PROJECT_PATH_OUTPUT_SUBFOLDER + " " + output_path)
+	#
+	# print("Copying and merging output..")
+	# with open(output_path + dataset_name + "_rawoutput_concat", 'w') as outfile:
+	# 	outfile.write(HEADER + "\n")
+	# 	for file in sorted(glob.glob(output_path + HADOOP_PROJECT_PATH_OUTPUT_SUBFOLDER[1:] + "/part-r-*")):
+	# 		with open(file, 'r') as readfile:
+	# 			shutil.copyfileobj(readfile, outfile)
 
 	print("Evaluating...")
 	Evaluator.evaluate(dataset_name=dataset_name, dataset_path=output_path + dataset_name + "_rawoutput_concat",
 	                   output_path=output_path)
 
-	print("Clean up...")
-	os.remove(output_path + dataset_name + "_rawoutput_concat")
-	shutil.rmtree(output_path + HADOOP_PROJECT_PATH_OUTPUT_SUBFOLDER[1:])
-	print("Done!")
+	# print("Clean up...")
+	# os.remove(output_path + dataset_name + "_rawoutput_concat")
+	# shutil.rmtree(output_path + HADOOP_PROJECT_PATH_OUTPUT_SUBFOLDER[1:])
+	# print("Done!")
 
 
 def sizeof_fmt(num, suffix='B'):

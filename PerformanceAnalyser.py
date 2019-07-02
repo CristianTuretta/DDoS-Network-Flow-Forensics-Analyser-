@@ -39,9 +39,7 @@ def plot_stats(stats_df, mode):
 		{'id': stats_df['id'], 'name': stats_df['name'], 'seconds': stats_df['seconds']}, axis=1)
 
 	sub_dataframe.plot('id', 'seconds', kind='bar', ax=ax)
-
-	for i, point in islice(sub_dataframe.iterrows(), 0, 5):
-		ax.text(point['id'], point['seconds'], str(point['name']).split(".")[0])
+	plt.xticks(sub_dataframe['id'], sub_dataframe['name'])
 
 	if mode == 'a':
 		plt.savefig(args.analysis_sts[0], dpi=300)
@@ -59,15 +57,15 @@ if __name__ == '__main__':
 	args = parser.parse_args()
 
 	dataframe = pd.DataFrame(pd.read_csv("PerformanceHistory.csv", sep=","))
-	fig, ax = plt.subplots()
+	fig, ax = plt.subplots(figsize=(12, 12))
 
 	if args.analysis_sts:
 		analysis_df = dataframe[dataframe['kind'] == 'a']
-		analysis_df.insert(loc=0, column='id', value=range(1, len(analysis_df) + 1))
+		analysis_df.insert(loc=0, column='id', value=range(0, len(analysis_df)))
 		plot_stats(analysis_df, 'a')
 	elif args.generation_sts:
 		generation_df = dataframe[dataframe['kind'] == 'g']
-		generation_df.insert(loc=0, column='id', value=range(1, len(generation_df) + 1))
+		generation_df.insert(loc=0, column='id', value=range(0, len(generation_df)))
 		plot_stats(generation_df, 'g')
 	else:
 		parser.print_help()
