@@ -76,11 +76,11 @@ def evaluate(dataset_name, dataset_path, output_path):
     file = open(output_path + dataset_name + "-report", 'a+')
     file.write("Data outliers (" + str(len(data_outliers)) + "):\n")
     for i in range(len(attackers_ip_data)):
-        file.write(str(attackers_ip_data[i][1]) + "-->" + str(data_outliers[i]) + "\n")
+        file.write(str(attackers_ip_data[i]) + "-->" + str(data_outliers[i]) + "\n")
 
     file.write("Traffic outliers:(" + str(len(traffic_outliers)) + "): \n")
     for i in range(len(attackers_ip_traffic)):
-        file.write(str(attackers_ip_traffic[i][1]) + "-->" + str(traffic_outliers[i]) + "\n")
+        file.write(str(attackers_ip_traffic[i]) + "-->" + str(traffic_outliers[i]) + "\n")
 
     file.close()
     dataframe.to_csv(output_path + dataset_name + "-indexed", index=False)
