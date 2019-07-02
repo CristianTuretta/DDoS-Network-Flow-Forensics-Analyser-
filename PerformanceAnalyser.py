@@ -38,7 +38,7 @@ def plot_stats(stats_df, mode):
 	sub_dataframe = pd.concat(
 		{'id': stats_df['id'], 'name': stats_df['name'], 'minutes': stats_df['seconds']/60}, axis=1)
 
-	sub_dataframe.plot('id', 'minutes', kind='scatter', ax=ax)
+	sub_dataframe.plot('id', 'minutes', kind='bar', ax=ax)
 
 	for i, point in islice(sub_dataframe.iterrows(), 0, 5):
 		ax.text(point['id'], point['minutes'], str(point['name']).split(".")[0])

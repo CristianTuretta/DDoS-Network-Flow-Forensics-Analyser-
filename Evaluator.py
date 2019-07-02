@@ -35,6 +35,10 @@ def evaluate(dataset_name, dataset_path, output_path):
     lower, upper = q25 - cut_off, q75 + cut_off
     # identify outliers
     traffic_outliers = [x for x in dataframe['ratio_vol_td'] if x < lower or x > upper]
+    attackers_ip_traffic = list()
+    for val in traffic_outliers:
+        attackers_ip_traffic.append(dataframe.loc[dataframe['group'] == val, 'ratio_vol_td'])
+    attackers_ip_traffic.reverse()
 
     # Percentile Data
     q25, q75 = percentile(dataframe['total_volume'], 25), percentile(dataframe['total_volume'], 75)
@@ -44,6 +48,10 @@ def evaluate(dataset_name, dataset_path, output_path):
     lower, upper = q25 - cut_off, q75 + cut_off
     # identify outliers
     data_outliers = [x for x in dataframe['total_volume'] if x < lower or x > upper]
+    attackers_ip_data = list()
+    for val in traffic_outliers:
+        attackers_ip_data.append(dataframe.loc[dataframe['group'] == val, 'total_volume'])
+    attackers_ip_data.reverse()
 
     fig, ax = plt.subplots(figsize=(14, 6))
     dataframe.plot('id', 'total_volume', kind='scatter', linewidth='0.5', ax=ax, label='Data exchanged')
@@ -66,8 +74,13 @@ def evaluate(dataset_name, dataset_path, output_path):
     plt.savefig(output_path + dataset_name + "-volume_analysis.png", dpi=300)
 
     file = open(output_path + dataset_name + "-report", 'a+')
-    file.write("Data outliers (" + str(len(data_outliers)) + "): " + str(data_outliers) + "\n")
-    file.write("Traffic outliers:(" + str(len(traffic_outliers)) + "): " + str(traffic_outliers) + "\n")
-    file.close()
+    file.write("Data outliers (" + str(len(data_outliers)) + "):\n")
+    for i in range(len(attackers_ip_data)):
+        file.write(str(attackers_ip_data[i][1]) + "-->" + str(data_outliers[i]) + "\n")
 
+    file.write("Traffic outliers:(" + str(len(traffic_outliers)) + "): \n")
+    for i in range(len(attackers_ip_traffic)):
+        file.write(str(attackers_ip_traffic[i][1]) + "-->" + str(traffic_outliers[i]) + "\n")
+
+    file.close()
     dataframe.to_csv(output_path + dataset_name + "-indexed", index=False)
