@@ -37,7 +37,7 @@ def evaluate(dataset_name, dataset_path, output_path):
     traffic_outliers = [x for x in dataframe['ratio_vol_td'] if x < lower or x > upper]
     attackers_ip_traffic = list()
     for val in traffic_outliers:
-        attackers_ip_traffic.append(dataframe.loc[dataframe['group'] == val, 'ratio_vol_td'])
+        attackers_ip_traffic.append(str(dataframe.loc[dataframe['group'] == val, 'ratio_vol_td']))
     attackers_ip_traffic.reverse()
 
     # Percentile Data
@@ -50,7 +50,7 @@ def evaluate(dataset_name, dataset_path, output_path):
     data_outliers = [x for x in dataframe['total_volume'] if x < lower or x > upper]
     attackers_ip_data = list()
     for val in traffic_outliers:
-        attackers_ip_data.append(dataframe.loc[dataframe['group'] == val, 'total_volume'])
+        attackers_ip_data.append(str(dataframe.loc[dataframe['group'] == val, 'total_volume']))
     attackers_ip_data.reverse()
 
     fig, ax = plt.subplots(figsize=(14, 6))
