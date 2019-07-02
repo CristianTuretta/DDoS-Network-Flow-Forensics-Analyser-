@@ -37,7 +37,7 @@ def evaluate(dataset_name, dataset_path, output_path):
     traffic_outliers = [x for x in dataframe['ratio_vol_td'] if x < lower or x > upper]
     attackers_ip_traffic = list()
     for val in traffic_outliers:
-        attackers_ip_traffic.append(str(dataframe.loc[dataframe['group'] == val, 'ratio_vol_td']))
+        attackers_ip_traffic.append(str(dataframe.loc[dataframe['ratio_vol_td'] == val, 'group']))
     attackers_ip_traffic.reverse()
 
     # Percentile Data
@@ -49,8 +49,8 @@ def evaluate(dataset_name, dataset_path, output_path):
     # identify outliers
     data_outliers = [x for x in dataframe['total_volume'] if x < lower or x > upper]
     attackers_ip_data = list()
-    for val in traffic_outliers:
-        attackers_ip_data.append(str(dataframe.loc[dataframe['group'] == val, 'total_volume']))
+    for val in data_outliers:
+        attackers_ip_data.append(str(dataframe.loc[dataframe['total_volume'] == val, 'group']))
     attackers_ip_data.reverse()
 
     fig, ax = plt.subplots(figsize=(14, 6))
@@ -76,11 +76,11 @@ def evaluate(dataset_name, dataset_path, output_path):
     file = open(output_path + dataset_name + "-report", 'a+')
     file.write("Data outliers (" + str(len(data_outliers)) + "):\n")
     for i in range(len(attackers_ip_data)):
-        file.write(str(attackers_ip_data[i]) + "-->" + str(data_outliers[i]) + "\n")
+        file.write(str(attackers_ip_data[i]).split("\n")[0] + "-->" + str(data_outliers[i]) + "\n")
 
     file.write("Traffic outliers:(" + str(len(traffic_outliers)) + "): \n")
     for i in range(len(attackers_ip_traffic)):
-        file.write(str(attackers_ip_traffic[i]) + "-->" + str(traffic_outliers[i]) + "\n")
+        file.write(str(attackers_ip_traffic[i]).split("\n")[0] + "-->" + str(traffic_outliers[i]) + "\n")
 
     file.close()
     dataframe.to_csv(output_path + dataset_name + "-indexed", index=False)
