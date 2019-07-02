@@ -36,12 +36,12 @@ def performance_eval(function, *args):
 
 def plot_stats(stats_df, mode):
 	sub_dataframe = pd.concat(
-		{'id': stats_df['id'], 'name': stats_df['name'], 'minutes': stats_df['seconds']/60}, axis=1)
+		{'id': stats_df['id'], 'name': stats_df['name'], 'seconds': stats_df['seconds']}, axis=1)
 
-	sub_dataframe.plot('id', 'minutes', kind='bar', ax=ax)
+	sub_dataframe.plot('id', 'seconds', kind='bar', ax=ax)
 
 	for i, point in islice(sub_dataframe.iterrows(), 0, 5):
-		ax.text(point['id'], point['minutes'], str(point['name']).split(".")[0])
+		ax.text(point['id'], point['seconds'], str(point['name']).split(".")[0])
 
 	if mode == 'a':
 		plt.savefig(args.analysis_sts[0], dpi=300)
